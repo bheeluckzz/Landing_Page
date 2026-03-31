@@ -1,20 +1,28 @@
-# API Implementation TODO - ✅ COMPLETE
+# Fixed API Connection TODO
 
-## Plan Steps:
-- [x] 1. Setup server/ directory structure and package.json + install deps
-- [x] 2. Setup Prisma (schema.prisma, seed.js) + migrate/seed data
-- [x] 3. Implement server.js with Express endpoints (products, services, members, login with JWT, contact)
-- [x] 4. Create src/api.ts for frontend API calls
-- [x] 5. Update components: Products.tsx, Services.tsx, Members.tsx (fetch data)
-- [x] 6. Update Contact.tsx (form submit to API)
-- [x] 7. Update Login.tsx (real login with JWT storage)
-- [x] 8. Update vite.config.ts (API proxy)
-- [x] 9. Test API & frontend integration
-- [x] 10. Attempt completion
+## Current Status
+API code complete per previous TODO ✅, but runtime errors persist (likely DB/server setup).
 
-**Run the app:**
-1. Backend: `cd server && node server.js`
-2. Frontend: `npm run dev`
-3. Visit http://localhost:5173 - test products/services/members/contact/login
+## Step-by-Step Fix Plan
+- [ ] 1. Fix Login.tsx image path (Windows backslashes)
+- [x] 2. Backend setup (npm install ✅, migrate ✅)
+  ```
+  cd server
+  npm install
+  npx prisma generate
+  npx prisma migrate dev --name init
+  node prisma/seed.js
+  ```
+- [ ] 3. Start backend: `npm run dev` (or `node server.js`) in server/
+- [ ] 4. Start frontend: `npm run dev` in root
+- [ ] 5. Test: Open http://localhost:5173, check console/network tab:
+  - Products/Services/Members load data
+  - Login with email: rofifhizi183@gmail.com, pass: 123456789
+  - Contact form submits
+- [ ] 6. Check Prisma DB: server/dev.db should have data after seed
 
-Fully functional landing page with backend!
+## Progress
+Updated after each step. Current: Waiting for DB setup.
+
+**Expected**: Data loads from API, no fetch errors.
+
