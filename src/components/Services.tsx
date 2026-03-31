@@ -1,11 +1,16 @@
-const services = [
-  { title: "Lifetime Guarantee", desc: "High quality products guaranteed." },
-  { title: "Good Price", desc: "Best value for premium devices." },
-  { title: "Free Software Updates", desc: "Lifetime update support." },
-  { title: "24/7 Support", desc: "We are always here to help." },
-];
+import { useState, useEffect } from 'react';
+import { api } from '../../api';
 
 const Services = () => {
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.getServices().then(setServices).catch(console.error).finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div className="py-20 text-center">Loading...</div>;
+
   return (
     <section id="services" className="py-20 scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 text-center">
@@ -16,7 +21,7 @@ const Services = () => {
         <div className="grid md:grid-cols-2 gap-8">
           {services.map((item) => (
             <div
-              key={item.title}
+              key={item.id || item.title}
               className="bg-card p-8 rounded-xl text-left hover:border-primary border border-gray-500 transition"
             >
               <h4 className="text-xl font-semibold mb-4 text-primary">

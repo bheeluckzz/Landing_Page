@@ -1,10 +1,16 @@
-const products = [
-  { title: "Gaming", img: "src/assets/gaming.png" },
-  { title: "Graphic Design", img: "src/assets/design.png" },
-  { title: "Office & Others", img: "src/assets/office.png" },
-];
+import { useState, useEffect } from 'react';
+import { api } from '../../api';
 
 const Products = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.getProducts().then(setProducts).catch(console.error).finally(() => setLoading(false));
+  }, []);
+
+  if (loading) return <div className="py-20 text-center">Loading...</div>;
+
   return (
     <section id="products" className="py-20 bg-card scroll-mt-20">
       <div className="max-w-7xl mx-auto px-6 text-center">
@@ -15,7 +21,7 @@ const Products = () => {
         <div className="grid md:grid-cols-3 gap-8">
           {products.map((item) => (
             <div
-              key={item.title}
+              key={item.id || item.title}
               className="bg-dark p-8 rounded-xl hover:scale-105 transition"
             >
               <img

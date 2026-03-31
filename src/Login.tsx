@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { api } from './api';
 
 interface LoginFormData {
   email: string;
@@ -22,7 +23,7 @@ export default function Login() {
     }));
   };
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validasi email dan password
@@ -36,38 +37,20 @@ export default function Login() {
       return;
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       alert('Format email tidak valid');
       return;
     }
 
-    // Simulasi login (ganti dengan API call sesuai kebutuhan)
-    console.log('Login attempt:', formData);
-    
-    // TODO: Ganti dengan API call ke backend
-    // const response = await fetch('/api/login', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(formData)
-    // });
-    // const data = await response.json();
-
-    // Simulasi login berhasil
-    const loginSuccess = true;
-    
-    if (loginSuccess) {
-      // Simpan data user ke localStorage (opsional)
-      localStorage.setItem('user', JSON.stringify(formData));
-      
-      // Tampilkan pesan sukses
+    try {
+      const response = await api.login(formData);
+      localStorage.setItem('token', response.token || '');
+      localStorage.setItem('user', JSON.stringify(response.user));
       alert('Login berhasil!');
-      
-      // Redirect ke halaman home
       navigate('/#home');
-    } else {
-      alert('Email atau password salah');
+    } catch (error: any) {
+      alert(error.message || 'Login gagal');
     }
   };
 
