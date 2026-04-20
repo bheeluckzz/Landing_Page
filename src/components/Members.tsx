@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react';
-import { api } from '../../api';
+// import { useState, useEffect } from 'react';
+// import { api } from '../../api';
 
 const Members = () => {
-  const [members, setMembers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const members = ["Electros", "Tech Lab", "PC Predator", "SpacePlay"];
 
-  useEffect(() => {
-    api.getMembers().then(setMembers).catch(console.error).finally(() => setLoading(false));
-  }, []);
-
-  if (loading) return <div className="py-20 text-center">Loading...</div>;
+  // TODO: Re-enable API when backend running
+  // const [members, setMembers] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // useEffect(() => {
+  //   api.getMembers().then(setMembers).catch(console.error).finally(() => setLoading(false));
+  // }, []);
+  // if (loading) return <div className="py-20 text-center">Loading...</div>;
 
   return (
     <section id="members" className="py-20 bg-card scroll-mt-20">
@@ -21,10 +22,10 @@ const Members = () => {
         <div className="grid md:grid-cols-4 gap-6">
           {members.map((member) => (
             <div
-              key={member.id || member.name}
-              className="bg-dark p-8 rounded-xl hover:scale-105 border border-gray-500 transition"
+              key={member}
+              className="bg-dark p-8 rounded-xl hover:scale-102 hover:shadow-2xl transition-all duration-500 ease-in-out shadow-lg border border-gray-500/50"
             >
-              <p className="text-lg font-semibold">{member.name}</p>
+              <p className="text-lg font-semibold">{member}</p>
             </div>
           ))}
         </div>
@@ -34,3 +35,4 @@ const Members = () => {
 };
 
 export default Members;
+

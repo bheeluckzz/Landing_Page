@@ -1,0 +1,163 @@
+[
+  {
+    "name": "Apple",
+    "id": "item_1776063016563",
+    "created": "2026-04-13T06:50:16.563Z",
+    "year": 2026,
+    "price": 1099.99,
+    "cpuModel": "M2",
+    "hardDiskSize": "1 TB"
+  },
+  {
+    "id": "item1",
+    "name": "Asus",
+    "year": 2023,
+    "price": 15299.99,
+    "cpuModel": "Intel i7",
+    "hardDiskSize": "1TB SSD"
+  },
+  {
+    "name": "Axioo",
+    "year": 2022,
+    "price": 5897.99,
+    "cpuModel": "Intel I5",
+    "hardDiskSize": "512 GB",
+    "id": "item_1776084883951",
+    "created": "2026-04-13T12:54:43.951Z"
+  },
+  {
+    "name": "Honor",
+    "year": 2024,
+    "price": 1356.99,
+    "cpuModel": "Mediatek",
+    "hardDiskSize": "256 GB",
+    "id": "item_1776064395728",
+    "created": "2026-04-13T07:13:15.728Z"
+  },
+  {
+    "name": "HP",
+    "year": 2023,
+    "price": 6659.99,
+    "cpuModel": "Intel I3",
+    "hardDiskSize": "512 GB",
+    "id": "item_1776084841081",
+    "created": "2026-04-13T12:54:01.081Z"
+  },
+  {
+    "name": "Huawei",
+    "year": 2026,
+    "price": 1578.99,
+    "cpuModel": "Kirin",
+    "hardDiskSize": "512 GB",
+    "id": "item_1776064316824",
+    "created": "2026-04-13T07:11:56.824Z"
+  },
+  {
+    "name": "Infinix",
+    "year": 2025,
+    "price": 1256.99,
+    "cpuModel": "Mediatek",
+    "hardDiskSize": "512 GB",
+    "id": "item_1776064234339",
+    "created": "2026-04-13T07:10:34.339Z"
+  },
+  {
+    "name": "Legion",
+    "year": 2026,
+    "price": 30467.99,
+    "cpuModel": "Intel I9",
+    "hardDiskSize": "1 TB",
+    "id": "item_1776084732232",
+    "created": "2026-04-13T12:52:12.232Z"
+  },
+  {
+    "name": "Lenovo",
+    "year": 2021,
+    "price": 5897.99,
+    "cpuModel": "Intel I5",
+    "hardDiskSize": "512 GB",
+    "id": "item_1776084634375",
+    "created": "2026-04-13T12:50:34.375Z"
+  },
+  {
+    "name": "MSI",
+    "year": 2024,
+    "price": 12453.99,
+    "cpuModel": "Intel I7",
+    "hardDiskSize": "1 TB",
+    "id": "item_1776085000033",
+    "created": "2026-04-13T12:56:40.033Z"
+  },
+  {
+    "name": "Oppo",
+    "year": 2022,
+    "price": 1145.99,
+    "cpuModel": "Mediatek",
+    "hardDiskSize": "256 GB",
+    "id": "item_1776068580805",
+    "created": "2026-04-13T08:23:00.805Z"
+  },
+  {
+    "name": "Pixel",
+    "year": 2024,
+    "price": 2489.99,
+    "cpuModel": "Snapdragon",
+    "hardDiskSize": "1 TB",
+    "id": "item_1776064434534",
+    "created": "2026-04-13T07:13:54.534Z"
+  },
+  {
+    "name": "Poco",
+    "year": 2023,
+    "price": 1289.99,
+    "cpuModel": "Snapdragon",
+    "hardDiskSize": "256 GB",
+    "id": "item_1776064371722",
+    "created": "2026-04-13T07:12:51.722Z"
+  },
+  {
+    "name": "Redmi",
+    "year": 2024,
+    "price": 1099.99,
+    "cpuModel": "Dimensity",
+    "hardDiskSize": "512 GB",
+    "id": "item_1776069393063",
+    "created": "2026-04-13T08:36:33.063Z"
+  },
+  {
+    "name": "ROG",
+    "year": 2025,
+    "price": 30289.99,
+    "cpuModel": "Intel I9",
+    "hardDiskSize": "1 TB",
+    "id": "item_1776084691081",
+    "created": "2026-04-13T12:51:31.081Z"
+  },
+  {
+    "name": "samsung",
+    "year": 2026,
+    "price": 3589.99,
+    "cpuModel": "Exynos",
+    "hardDiskSize": "1 TB",
+    "id": "item_1776063318916",
+    "created": "2026-04-13T06:55:18.916Z"
+  },
+  {
+    "name": "Vivo",
+    "year": 2024,
+    "price": 1125.99,
+    "cpuModel": "Dimensity",
+    "hardDiskSize": "256 GB",
+    "id": "item_1776069465622",
+    "created": "2026-04-13T08:37:45.622Z"
+  },
+  {
+    "name": "Xiaomi",
+    "year": 2024,
+    "price": 2367.99,
+    "cpuModel": "Snapdragon",
+    "hardDiskSize": "256 GB",
+    "id": "item_1776064270944",
+    "created": "2026-04-13T07:11:10.944Z"
+  }
+]

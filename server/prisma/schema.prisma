@@ -7,6 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Product {
@@ -39,4 +40,14 @@ model User {
   email    String   @unique
   password String
   created  DateTime @default(now())
+}
+
+model ObjectItem {
+  id            String @id @default(cuid())
+  name          String
+  year          Int?
+  price         Float?
+  cpuModel      String?
+  hardDiskSize  String?
+  created       DateTime @default(now())
 }

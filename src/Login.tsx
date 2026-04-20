@@ -3,17 +3,21 @@ import { Eye, EyeOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { api } from './api';
 
-interface LoginFormData {
+interface FormData {
   email: string;
   password: string;
+  confirmPassword?: string;
 }
 
 export default function Login() {
-  const [formData, setFormData] = useState<LoginFormData>({
-    email: 'rofifhizi183@gmail.com',
-    password: '123456789',
+  const [isLogin, setIsLogin] = useState(true);
+  const [formData, setFormData] = useState<FormData>({
+    email: '',
+    password: '',
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -21,36 +25,63 @@ export default function Login() {
       ...prev,
       [name]: value
     }));
+    setError('');
   };
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validasi email dan password
+  const validateForm = () => {
     if (!formData.email.trim()) {
-      alert('Email tidak boleh kosong');
-      return;
+      setError('Email tidak boleh kosong');
+      return false;
     }
     
     if (!formData.password.trim()) {
-      alert('Password tidak boleh kosong');
-      return;
+      setError('Password tidak boleh kosong');
+      return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      alert('Format email tidak valid');
-      return;
+      setError('Format email tidak valid');
+      return false;
     }
 
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      setError('Konfirmasi password tidak cocok');
+      return false;
+    }
+
+    if (!isLogin && formData.password.length < 6) {
+      setError('Password minimal 6 karakter');
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+
+    if (!validateForm()) return;
+
     try {
-      const response = await api.login(formData);
+      let response;
+      if (isLogin) {
+        response = await api.login({ email: formData.email, password: formData.password });
+      } else {
+        response = await api.register({ email: formData.email, password: formData.password });
+        alert('Registrasi berhasil! Silakan login.');
+        setIsLogin(true);
+        setFormData({ email: '', password: '', confirmPassword: '' });
+        return;
+      }
+
       localStorage.setItem('token', response.token || '');
       localStorage.setItem('user', JSON.stringify(response.user));
       alert('Login berhasil!');
-      navigate('/#home');
-    } catch (error: any) {
-      alert(error.message || 'Login gagal');
+      navigate('/profile');
+    } catch (err: any) {
+      setError(err.message || 'Operasi gagal');
     }
   };
 
@@ -64,29 +95,63 @@ export default function Login() {
     { name: 'WeChat', icon: '💬' },
   ];
 
-  const navigate = useNavigate();
-
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <img
-            src="src\assets\techgear.png"
+            src="src/assets/techgear.webp"
             alt="Techgear"
             className="h-12 mx-auto mb-8"
           />
         </div>
 
         {/* Main Content */}
-        <div className="space-y-8">
-          {/* Header Text */}
-          <div className="text-center">
-            <h1 className="text-white text-xl mb-2">Log in dengan ID Logi Anda.</h1>
+        <div className="space-y-6">
+          {/* Tab Buttons */}
+          <div className="flex bg-gray-900 rounded-lg p-1">
+            <button
+              onClick={() => setIsLogin(true)}
+              className={`flex-1 py-3 px-4 rounded-md font-semibold text-sm transition-all ${
+                isLogin
+                  ? 'bg-cyan-400 text-black shadow-lg'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              Login
+            </button>
+            <button
+              onClick={() => setIsLogin(false)}
+              className={`flex-1 py-3 px-4 rounded-md font-semibold text-sm transition-all ${
+                !isLogin
+                  ? 'bg-cyan-400 text-black shadow-lg'
+                  : 'text-gray-400 hover:text-white'
+              }`}
+            >
+              Daftar
+            </button>
           </div>
 
-          {/* Login Form */}
-          <form onSubmit={handleLogin} className="space-y-6">
+          {/* Header Text */}
+          <div className="text-center">
+            <h1 className="text-white text-xl mb-2">
+              {isLogin ? 'Log in dengan ID Login Anda.' : 'Buat akun baru'}
+            </h1>
+            <p className="text-gray-400 text-sm">
+              {isLogin ? 'Masukkan email dan kata sandi Anda.' : 'Daftar dengan email Anda.'}
+            </p>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-500/20 border border-red-500/50 text-red-300 p-4 rounded-lg text-sm">
+              {error}
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Input */}
             <div>
               <label className="block text-gray-400 text-xs font-semibold mb-3 tracking-wider">
@@ -132,95 +197,98 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Forgot Password */}
-            <div className="text-right">
-              <a
-                href="#"
-                className="text-gray-400 text-sm hover:text-white transition-colors"
-              >
-                Lupa kata sandi?
-              </a>
-            </div>
+            {/* Confirm Password (Register only) */}
+            {!isLogin && (
+              <div>
+                <label className="block text-gray-400 text-xs font-semibold mb-3 tracking-wider">
+                  KONFIRMASI KATA SANDI
+                </label>
+                <div className="relative">
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword || ''}
+                    onChange={handleInputChange}
+                    placeholder=""
+                    className="w-full bg-transparent border-b border-gray-600 text-white placeholder-gray-600 py-3 focus:outline-none focus:border-cyan-400 transition-colors pr-10"
+                    required
+                  />
+                </div>
+              </div>
+            )}
 
-            {/* Login Button */}
+            {/* Forgot Password (Login only) */}
+            {isLogin && (
+              <div className="text-right">
+                <a
+                  href="#"
+                  className="text-gray-400 text-sm hover:text-white transition-colors"
+                >
+                  Lupa kata sandi?
+                </a>
+              </div>
+            )}
+
+            {/* Submit Button */}
             <button
               type="submit"
               className="w-full bg-cyan-400 text-black font-bold py-3 rounded hover:bg-cyan-300 transition-colors uppercase tracking-wider"
             >
-              Login
+              {isLogin ? 'Login' : 'Daftar'}
             </button>
           </form>
 
-          {/* Privacy Notice */}
-          <div className="text-center text-gray-500 text-xs">
-            <p>
-              Situs ini dilindungi oleh hCaptcha dan berlaku{' '}
-              <a href="#" className="underline hover:text-gray-400">
-                Kebijakan Privasi
-              </a>
-              {' '}dan{' '}
-              <a href="#" className="underline hover:text-gray-400">
-                Ketentuan Layanannya
-              </a>
-              .
-            </p>
-          </div>
+          {/* Other sections (privacy, passkey, social) */}
+          <div className="space-y-4 text-center">
+            {/* Privacy */}
+            <div className="text-gray-500 text-xs">
+              <p>
+                Situs ini dilindungi oleh hCaptcha dan berlaku{' '}
+                <a href="#" className="underline hover:text-gray-400">
+                  Kebijakan Privasi
+                </a>
+                {' '}dan{' '}
+                <a href="#" className="underline hover:text-gray-400">
+                  Ketentuan Layanannya
+                </a>
+                .
+              </p>
+            </div>
 
-          {/* Passkey Section */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 justify-center">
-              <a
-                href="#"
-                className="text-yellow-400 hover:text-yellow-300 text-sm font-semibold flex items-center gap-2 transition-colors"
-              >
-                🔑 GUNAKAN KUNCI SANDI UNTUK MASUK
-              </a>
-              <span className="text-gray-500 text-lg cursor-help">ℹ️</span>
+            {/* Divider */}
+            <div className="relative py-4">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-gray-700"></div>
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-4 bg-black text-gray-500 uppercase text-xs tracking-widest">
+                  ATAU
+                </span>
+              </div>
             </div>
-            <div className="text-center">
-              <a
-                href="#"
-                className="text-gray-400 text-sm hover:text-white transition-colors"
-              >
-                Kunci sandi hilang?
-              </a>
-            </div>
-          </div>
 
-          {/* Divider */}
-          <div className="relative py-4">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-700"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-black text-gray-500 uppercase text-xs tracking-widest">
-                ATAU
-              </span>
+            {/* Social Login */}
+            <div>
+              <div className="flex justify-center gap-3 flex-wrap">
+                {socialLogins.map((social) => (
+                  <button
+                    key={social.name}
+                    className="bg-white rounded-full p-3 hover:bg-gray-200 transition-colors"
+                    title={social.name}
+                  >
+                    <span className="text-xl">{social.icon}</span>
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Social Login */}
-          <div className="space-y-4">
-            <p className="text-center text-gray-400 text-sm mb-4">
-              Kunci sandi hilang?
-            </p>
-            <div className="flex justify-center gap-3 flex-wrap">
-              {socialLogins.map((social) => (
-                <button
-                  key={social.name}
-                  className="bg-white rounded-full p-3 hover:bg-gray-200 transition-colors"
-                  title={social.name}
-                >
-                  <span className="text-xl">{social.icon}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Navigation Arrows */}
+          {/* Navigation */}
           <div className="flex justify-between items-center px-4">
-            <button className="text-gray-600 hover:text-white transition-colors text-2xl" 
-            onClick={() => navigate('/#home')}>
+            <button 
+              className="text-gray-600 hover:text-white transition-colors text-2xl" 
+              onClick={() => navigate('/')}
+            >
               ← 
             </button>
             <button className="text-gray-600 hover:text-white transition-colors text-2xl">

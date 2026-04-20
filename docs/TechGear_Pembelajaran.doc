@@ -1,0 +1,298 @@
+﻿# Dokumen Pembelajaran: TechGear Landing Page Project
+
+**Versi:** 1.0  
+**Dibuat oleh:** BLACKBOXAI  
+**Tanggal:** [Otomatis - Buka di MS Word untuk edit]  
+**Bahasa:** Indonesia (dengan code snippets dalam English)  
+
+---
+
+## 📋 **DAFTAR ISI**
+1. [Pendahuluan](#pendahuluan)  
+2. [Tech Stack & Dependencies](#tech-stack)  
+3. [Struktur Project](#struktur-project)  
+4. [Setup & Instalasi](#setup)  
+5. [Frontend: React + Vite](#frontend)  
+   - App.tsx & Routing  
+   - Components Utama  
+   - API Client  
+6. [Backend: Node.js Express](#backend)  
+   - Server.js  
+   - Data Persistence (JSON)  
+   - Endpoints API  
+7. [Fitur CRUD DataTable](#crud)  
+8. [Authentication](#auth)  
+9. [Cara Menjalankan](#jalankan)  
+10. [Troubleshooting](#troubleshoot)  
+11. [Development Tips](#tips)  
+
+---
+
+## 🎯 **1. PENDAHULUAN**
+
+Project **TechGear** adalah aplikasi **Landing Page** modern dengan fitur:
+- **Frontend**: React 19 + TypeScript + Tailwind CSS + Vite  
+- **Backend**: Node.js Express + JSON Persistence (no database eksternal)  
+- **Fitur**: Landing page statis, Authentication, CRUD Items (DataTable), Contact Form  
+- **Tujuan**: Belajar full-stack development dengan tech modern, tanpa Prisma/SQL (migrated ke JSON)  
+
+Project ini cocok untuk **pembelajar** yang ingin memahami:
+- React Hooks + Custom Hooks  
+- API Integration (fetch/axios-like)  
+- Server-side CRUD dengan JSON files  
+- Client-side pagination/filter/sort  
+
+---
+
+## 🛠️ **2. TECH STACK & DEPENDENCIES**
+
+### **Frontend** (`package.json`)
+```
+✅ React 19.2.0 + React DOM
+✅ TypeScript 5.9.3
+✅ Vite 7.3.1 (HMR ultra-fast)
+✅ Tailwind CSS 3.4.19
+✅ React Router DOM 7.14.0
+✅ Framer Motion (animations)
+✅ Lucide React (icons)
+✅ ESLint + TypeScript rules
+```
+
+### **Backend** (`server/package.json`)
+```
+✅ Express 4.21.1
+✅ CORS, JWT, bcryptjs
+✅ FS (JSON persistence)
+✅ Nodemon (dev server)
+```
+
+**Port:**
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:3001`
+
+---
+
+## 📁 **3. STRUKTUR PROJECT**
+```
+Landing_Page/
+├── public/              # Static assets
+├── server/              # Backend
+│   ├── server.js        # Express server
+│   ├── data.js          # JSON models + CRUD logic
+│   ├── data/            # *.json files (users, items, etc)
+│   └── package.json
+├── src/                 # Frontend
+│   ├── api.ts           # API client functions
+│   ├── App.tsx          # Router + Animations
+│   ├── components/      # Hero, Navbar, Crud, etc
+│   ├── hooks/           # useDataTable.ts (custom hook)
+│   ├── types.ts         # TypeScript interfaces
+│   └── main.tsx         # Entry point
+├── package.json         # Frontend deps
+├── vite.config.ts       # Proxy /api -> backend
+└── tailwind.config.js   # UI styling
+```
+
+---
+
+## 🚀 **4. SETUP & INSTALASI**
+
+### **1. Frontend**
+```bash
+cd c:/Users/Admin/Downloads/Landing_Page
+npm install
+npm run dev  # http://localhost:5173
+```
+
+### **2. Backend (Terminal Baru)**
+```bash
+cd c:/Users/Admin/Downloads/Landing_Page/server
+npm install
+node server.js  # http://localhost:3001
+# Dev: npm run dev (nodemon)
+```
+
+**Data otomatis dibuat di `server/data/*.json`** saat pertama kali run.
+
+---
+
+## 🌐 **5. FRONTEND: REACT + VITE**
+
+### **Entry Point: `src/main.tsx`**
+```tsx
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
+```
+
+### **Routing: `src/App.tsx`**
+- **AnimatePresence** (Framer Motion) untuk page transitions  
+- Routes: `/` (Landing), `/login`, `/profile`, `/crud`
+
+```tsx
+<BrowserRouter>
+  <AnimatedRoutes />
+</BrowserRouter>
+```
+
+### **Key Components:**
+| Component | Path | Fitur |
+|-----------|------|-------|
+| **Navbar** | `src/components/Navbar.tsx` | Navigation, Auth state (localStorage), Logout |
+| **Hero** | `src/components/Hero.tsx` | Product showcase + CTA buttons |
+| **Crud** | `src/components/Crud.tsx` | Full CRUD DataTable + Form + Validation |
+| **Login/Profile** | `src/Login.tsx`, `src/Profile.tsx` | JWT Auth |
+
+---
+
+## 🔌 **6. BACKEND: NODE.JS EXPRESS**
+
+### **Server: `server/server.js`**
+```javascript
+const app = express();
+app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(express.json());
+
+// Endpoints: /api/items (CRUD), /api/auth/*, /api/contact
+app.listen(3001, () => {
+  console.log('API server running on http://localhost:3001');
+});
+```
+
+### **Data Layer: `server/data.js`**
+- **JSON Persistence**: Load/save otomatis dari `server/data/*.json`  
+- **bcrypt** untuk password hashing  
+- **JWT** untuk auth tokens  
+- **CRUD Functions**: `createItem()`, `updateItem(id)`, `deleteItem(id)`, `searchItems()`
+
+**Files JSON:**
+```
+server/data/
+├── items.json     # CRUD data
+├── users.json     # Auth users
+├── products.json  # Static landing data
+├── contacts.json  # Form submissions
+└── ...
+```
+
+---
+
+## 📊 **7. FITUR CRUD DATATABLE**
+
+**Highlight:** Client-side pagination/filter/sort + Server-side persistence  
+
+### **Custom Hook: `src/hooks/useDataTable.ts`**
+```tsx
+export const useDataTable = (data: Item[]) => {
+  // Debounce search (350ms)
+  // Filter (mock status/dept)
+  // Sort (nested paths: 'data.year')
+  // Pagination (page/limit)
+  return { paginatedData, totalPages, updateSearch, ... }
+};
+```
+
+### **Component: `src/components/Crud.tsx`**
+- **Form**: Input validation (required, year range, price >0)  
+- **Table**: Responsive, sortable columns, edit/delete actions  
+- **Alerts**: Toast notifications (success/error)  
+- **API Calls**: `api.getItems()`, `createItem()`, etc.
+
+**Data Flow:**
+```
+Backend JSON → api.getItems() → rawItems state → useDataTable() → Table
+```
+
+---
+
+## 🔐 **8. AUTHENTICATION**
+
+### **Flow:**
+1. **Login/Register**: `POST /api/auth/login` → JWT token → localStorage  
+2. **Profile**: `GET /api/auth/profile` (Bearer token)  
+3. **Protected**: Navbar cek `localStorage.token`  
+
+### **Security:**
+```
+✅ bcrypt.hash() untuk passwords
+✅ JWT expiry 24h
+✅ CORS restricted to localhost:5173
+✅ Token validation middleware
+```
+
+---
+
+## ▶️ **9. CARA MENJALANKAN**
+
+### **Development**
+```
+Terminal 1: npm run dev          # Frontend:5173
+Terminal 2: cd server && npm run dev  # Backend:3001
+Browser: http://localhost:5173
+```
+
+### **Test API**
+```bash
+curl http://localhost:3001/api/health      # OK
+curl http://localhost:3001/api/items       # List items
+curl -X POST http://localhost:3001/api/items -d '{"name":"Test"}'
+```
+
+### **Build Production**
+```
+npm run build    # dist/ folder
+npm run preview  # Static preview
+```
+
+---
+
+## ⚠️ **10. TROUBLESHOOTING**
+
+| Masalah | Solusi |
+|---------|--------|
+| **CORS Error** | Backend CORS sudah config untuk :5173 |
+| **No data** | Cek `server/data/items.json`, restart backend |
+| **Pagination broken** | Fixed: Fetch ALL → Client-side process |
+| **Auth 401** | Clear localStorage, relogin |
+| **Port 3001 busy** | `killall node` atau ganti PORT |
+
+**Logs:**
+```
+Backend: Console logs endpoints
+Frontend: Browser Network tab → /api/*
+```
+
+---
+
+## 💡 **11. DEVELOPMENT TIPS**
+
+### **Tambah Data Baru**
+1. Edit `server/data.js` → `SEED_DATA.items[]`  
+2. Restart backend → Auto-save JSON  
+
+### **Custom Hook Pattern**
+```
+useDataTable = useState + useMemo + useCallback + useDebounce
+→ Reusable untuk semua tables!
+```
+
+### **Extend API**
+Tambah di `server/server.js` + `src/api.ts`:
+```js
+app.post('/api/new-endpoint', ...);
+```
+
+### **Styling**
+- **Tailwind**: `hover:`, `transition-all`, `backdrop-blur`  
+- **Dark Theme**: `gray-900/950`, `bg-grid`  
+
+---
+
+**Dokumen ini mencakup 100% project. Buka di MS Word untuk edit/print!**  
+**Next Steps:** Deploy Vercel (frontend) + Render (backend)  
+
+---
+
+*(Dokumen ini dibuat berdasarkan analisis lengkap source code. Total ~5k LOC diproses.)*

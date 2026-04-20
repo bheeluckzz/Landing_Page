@@ -6,28 +6,25 @@ const prisma = new PrismaClient();
 async function main() {
   // Seed Products
   for (const p of products) {
-    await prisma.product.upsert({
-      where: { title: p.title },
-      update: {},
-      create: p
+    await prisma.product.create({
+      data: {
+        title: p.title,
+        img: p.img
+      }
     });
   }
 
   // Seed Services
   for (const s of services) {
-    await prisma.service.upsert({
-      where: { title: s.title },
-      update: {},
-      create: s
+    await prisma.service.create({
+      data: s
     });
   }
 
   // Seed Members
   for (const m of members) {
-    await prisma.member.upsert({
-      where: { name: m },
-      update: {},
-      create: { name: m }
+    await prisma.member.create({
+      data: { name: m }
     });
   }
 

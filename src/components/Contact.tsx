@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { api } from '../../api';
+import { api } from '../api';
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -9,12 +9,13 @@ const Contact = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    setStatus('');
     try {
       await api.contact(formData);
       setStatus('Message sent successfully!');
       setFormData({ name: '', email: '', message: '' });
     } catch (error) {
-      setStatus('Failed to send message.');
+      setStatus('Failed to send message. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -59,7 +60,11 @@ const Contact = () => {
           >
             {loading ? 'Sending...' : 'Submit'}
           </button>
-          {status && <p className="text-center text-green-400">{status}</p>}
+          {status && (
+            <p className={`text-center ${status.includes('success') ? 'text-green-400' : 'text-red-400'}`}>
+              {status}
+            </p>
+          )}
         </form>
       </div>
     </section>
